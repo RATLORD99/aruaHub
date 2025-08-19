@@ -1,107 +1,97 @@
+-- Load Rayfield
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
+-- Create Window
 local Window = Rayfield:CreateWindow({
    Name = "AuraHub",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0,
    LoadingTitle = "Loading...",
    LoadingSubtitle = "by Aura",
-   ShowText = "Aura", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "AmberGlow", -- Check https://docs.sirius.menu/rayfield/configuration/themes
-
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
-
+   ShowText = "Aura",
+   Theme = "AmberGlow",
+   ToggleUIKeybind = "K",
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
-
+   DisableBuildWarnings = false,
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = nil,
       FileName = "configuration.txt"
    },
-
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
    },
-
-   KeySystem = true, -- Set this to true to use our key system
+   KeySystem = true,
    KeySettings = {
       Title = "Aura hub",
       Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"King"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"King"}
    }
 })
 
---Noteifications
-
+-- Notification
 Rayfield:Notify({
    Title = "Aura Hub",
-   Content = "Welcome to Arua",
+   Content = "Welcome to Aura",
    Duration = 6.5,
    Image = 4483362458,
 })
 
---info tab
-
-local Tab = Window:InfoTab("Info", "rewind")
-
-local Paragraph = Tab:CreateParagraph({Title = "Updates", Content = "Hello this is a new script hub we will try to Update the scripts weekly"})
-
---icon img
-
-local Tab = Window:CreateTab("Tab Example", "rewind")
-
---main menu
-local Tab = Window:CreateTab("Event", "rewind") -- Title, Image
-
-local Section = Tab:CreateSection("Beanstalk")
-
-local Toggle = Tab:CreateToggle({
---orb 1
-   local arg = {
-   1
-}
-game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
---orb 2
-local arg = {
-   2
-}
-game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
---orb 3
-local arg = {
-   3
-}
-game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
---orb 4
-local arg = {
-   4
-}
-game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
-
-
-   Name = "Collect Event Rewards",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-   -- The function that takes place when the toggle is pressed
-   -- The variable (Value) is a boolean on whether the toggle is true or false
-   end,
+-- Info Tab
+local InfoTab = Window:InfoTab("Info", "rewind")
+InfoTab:CreateParagraph({
+   Title = "Updates",
+   Content = "Hello! This is a new script hub. We will try to update the scripts weekly."
 })
 
---disvider
+-- Event Tab
+local EventTab = Window:CreateTab("Event", "rewind")
+local Section = EventTab:CreateSection("Beanstalk")
 
-local Divider = Tab:CreateDivider()
-Divider:Set(false) -- Whether the divider's visibility is to be set to true or false.
+-- Toggle to collect event rewards repeatedly
+local running = false -- Controls the loop
 
---visablity 
---Rayfield:SetVisibility(false)
---Rayfield:IsVisible()
+local CollectToggle = Section:CreateToggle({
+    Name = "Collect Event Rewards",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        running = Value
+        if running then
+            print("Auto-collect started!")
+            spawn(function() -- Run loop in a separate thread
+                while running do
+                    -- Orb 1
+                    local args1 = {1}
+                    game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args1))
+                    
+                    -- Orb 2
+                    local args2 = {2}
+                    game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args2))
+                    
+                    -- Orb 3
+                    local args3 = {3}
+                    game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args3))
+                    
+                    -- Orb 4
+                    local args4 = {4}
+                    game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args4))
+                    
+                    print("Event rewards collected!")
+                    wait(5) -- Wait 5 seconds before repeating
+                end
+            end)
+        else
+            print("Auto-collect stopped!")
+        end
+    end
+})
 
--- Distroy the interface
-
-Rayfield:Destroy()
+-- Divider
+local Divider = EventTab:CreateDivider()
+Divider:Set(false) -- Set visibility
