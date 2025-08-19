@@ -51,6 +51,8 @@ InfoTab:CreateParagraph({
 
 -- Event Tab
 local EventTab = Window:CreateTab("Event", "rewind")
+
+-- Create Section for Toggles
 local Section = EventTab:CreateSection("Beanstalk")
 
 -- Toggle to collect event rewards repeatedly
@@ -64,7 +66,7 @@ local CollectToggle = Section:CreateToggle({
         running = Value
         if running then
             print("Auto-collect started!")
-            spawn(function() -- Run loop in a separate thread
+            spawn(function()
                 while running do
                     -- Orb 1
                     local args1 = {1}
@@ -83,7 +85,7 @@ local CollectToggle = Section:CreateToggle({
                     game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args4))
                     
                     print("Event rewards collected!")
-                    wait(5) -- Wait 5 seconds before repeating
+                    wait(5) -- Repeat every 5 seconds
                 end
             end)
         else
@@ -95,3 +97,6 @@ local CollectToggle = Section:CreateToggle({
 -- Divider
 local Divider = EventTab:CreateDivider()
 Divider:Set(false) -- Set visibility
+
+-- Optional: Destroy UI
+-- Rayfield:Destroy()
