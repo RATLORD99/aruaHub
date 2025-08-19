@@ -1,0 +1,44 @@
+
+-- Load Kavo UI Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
+-- Create Main Window
+local Window = Library.CreateLib("AuraHub", "DarkTheme") -- DarkTheme = black style
+
+-- Create Tab & Section
+local Tab = Window:NewTab("Events")
+local Section = Tab:NewSection("Bean Stalk")
+
+-- Collect event label
+Section:NewLabel("Collect Orbs")
+
+-- Farming control flag
+local farming = false
+
+-- Farming function
+local function startFarming()
+    farming = true
+    while farming do
+        for i = 1, 4 do
+            local args = { i }
+            game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+            task.wait(1) -- delay so it doesn’t overload
+        end
+    end
+end
+
+-- Stop farming
+local function stopFarming()
+    farming = false
+end
+
+-- Toggle in Kavo UI
+Section:NewToggle("BeanStalk Rewards", "AutoCollectOrbs", function(state)
+    if state then
+        startFarming()
+        print("Auto farming ON")
+    else
+        stopFarming()
+        print("Auto farming OFF")
+    end
+end)
