@@ -1,0 +1,5 @@
+local args = {
+ "PetAssets"
+ "Dragonfly"
+}
+game:GetService(ReplicatedStorage):WaitForChild("GameEvents"):WaitForChild("ReplicationChannel"):FireServer(unpack(args))
