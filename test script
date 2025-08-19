@@ -1,0 +1,133 @@
+-- Load Kavo UI Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
+-- Create Main Window
+local Window = Library.CreateLib("AuraHub", "DarkTheme") -- DarkTheme = black style
+
+-- === MOBILE FRIENDLY ADJUSTMENTS ===
+
+-- Scale the main frame for mobile (90% width, 80% height)
+Window.MainFrame.Size = UDim2.new(0.9, 0, 0.8, 0)
+Window.MainFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
+
+-- Disable original dragging (we'll implement custom drag for mobile)
+Window.MainFrame.Draggable = false
+
+-- Create a small toggle button to show/hide the UI
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local ScreenGui = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
+ScreenGui.ResetOnSpawn = false
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = ScreenGui
+ToggleButton.Size = UDim2.new(0, 100, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Text = "AuraHub"
+ToggleButton.TextScaled = true
+
+ToggleButton.MouseButton1Click:Connect(function()
+    Window.MainFrame.Visible = not Window.MainFrame.Visible
+end)
+
+-- === MINIMIZE BUTTON ===
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Parent = Window.MainFrame
+MinimizeButton.Size = UDim2.new(0, 50, 0, 30)
+MinimizeButton.Position = UDim2.new(1, -55, 0, 5) -- top-right corner
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+MinimizeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+MinimizeButton.Text = "-"
+MinimizeButton.TextScaled = true
+
+local originalSize = Window.MainFrame.Size
+local minimized = false
+
+MinimizeButton.MouseButton1Click:Connect(function()
+    if minimized then
+        Window.MainFrame.Size = originalSize
+        minimized = false
+    else
+        Window.MainFrame.Size = UDim2.new(0, 150, 0, 50) -- shrink to small bar
+        minimized = true
+    end
+end)
+
+-- === MAKE DRAGGABLE FUNCTION ===
+local function makeDraggable(frame)
+    local dragging = false
+    local dragInput, mousePos, framePos
+
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            mousePos = input.Position
+            framePos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - mousePos
+            frame.Position = UDim2.new(
+                framePos.X.Scale,
+                framePos.X.Offset + delta.X,
+                framePos.Y.Scale,
+                framePos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
+
+-- Apply draggable to main frame (works minimized or full)
+makeDraggable(Window.MainFrame)
+
+-- === END MOBILE FRIENDLY ADJUSTMENTS ===
+
+-- Create Tab & Section
+local Tab = Window:NewTab("Events")
+local Section = Tab:NewSection("Bean Stalk")
+
+-- Farming control flag
+local farming = false
+
+-- Farming function
+local function startFarming()
+    farming = true
+    while farming do
+        for i = 1, 4 do
+            local args = { i }
+            game:GetService("ReplicatedStorage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+            task.wait(1) -- delay so it doesn’t overload
+        end
+    end
+end
+
+-- Stop farming
+local function stopFarming()
+    farming = false
+end
+
+-- Toggle in Kavo UI
+Section:NewToggle("BeanStalk Rewards", "AutoCollectOrbs", function(state)
+    if state then
+        startFarming()
+        print("Auto farming ON")
+    else
+        stopFarming()
+        print("Auto farming OFF")
+    end
+end)
