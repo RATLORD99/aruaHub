@@ -16,7 +16,7 @@ local Window = Rayfield:CreateWindow({
    ConfigurationSaving = {
       Enabled = true,
       FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "AruaHub.lua"
+      FileName = "configuration.txt"
    },
 
    Discord = {
@@ -25,7 +25,7 @@ local Window = Rayfield:CreateWindow({
       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
    },
 
-   KeySystem = ture, -- Set this to true to use our key system
+   KeySystem = true, -- Set this to true to use our key system
    KeySettings = {
       Title = "Aura hub",
       Subtitle = "Key System",
@@ -57,45 +57,41 @@ local Paragraph = Tab:CreateParagraph({Title = "Updates", Content = "Hello this 
 local Tab = Window:CreateTab("Tab Example", "rewind")
 
 --main menu
-local Tab = Window:CreateTab("Event", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Event", "rewind") -- Title, Image
 
 local Section = Tab:CreateSection("Beanstalk")
 
---toggle Bean event
-
 local Toggle = Tab:CreateToggle({
-   Name = "Toggle Example",
-   CurrentValue = false,
-
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-
+--orb 1
    local arg = {
    1
 }
 game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
-
+--orb 2
 local arg = {
    2
 }
 game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
-
+--orb 3
 local arg = {
    3
 }
 game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
-
+--orb 4
 local arg = {
-   5
+   4
 }
 game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
--- The function that takes place when the toggle is pressed
 
+
+   Name = "Collect Event Rewards",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+   -- The function that takes place when the toggle is pressed
    -- The variable (Value) is a boolean on whether the toggle is true or false
    end,
 })
-
-Toggle:Set(false)
 
 --disvider
 
@@ -103,8 +99,8 @@ local Divider = Tab:CreateDivider()
 Divider:Set(false) -- Whether the divider's visibility is to be set to true or false.
 
 --visablity 
-Rayfield:SetVisibility(false)
-Rayfield:IsVisible()
+--Rayfield:SetVisibility(false)
+--Rayfield:IsVisible()
 
 -- Distroy the interface
 
