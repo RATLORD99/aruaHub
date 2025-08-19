@@ -6,7 +6,7 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "Loading...",
    LoadingSubtitle = "by Aura",
    ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Serenity", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   Theme = "AmberGlow", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
@@ -46,15 +46,58 @@ Rayfield:Notify({
    Image = 4483362458,
 })
 
+--info tab
+
+local Tab = Window:InfoTab("Info", "rewind")
+
+local Paragraph = Tab:CreateParagraph({Title = "Updates", Content = "Hello this is a new script hub we will try to Update the scripts weekly"})
+
 --icon img
 
 local Tab = Window:CreateTab("Tab Example", "rewind")
 
 --main menu
-local Tab = Window:CreateTab("Event", 4483362458) -- Title, Image
+local Tab = Window:EventTab("Event", 4483362458) -- Title, Image
 
-local Section = eventTab:CreateSection("Beanstalk")
-Section:Set("Section Example")
+local Section = Tab:EvanrSection("Beanstalk")
+
+--toggle Bean event
+
+local Toggle = Tab:EventToggle({
+   Name = "Toggle Example",
+   CurrentValue = false,
+
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+
+   local arg = {
+   1
+}
+game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+
+local arg = {
+   2
+}
+game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+
+local arg = {
+   3
+}
+game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+
+local arg = {
+   5
+}
+game:GameService("ReplicatedStoage"):WaitForChild("BeanstalkClaimREWard"):FireServer(unpack(args))
+-- The function that takes place when the toggle is pressed
+
+   -- The variable (Value) is a boolean on whether the toggle is true or false
+   end,
+})
+
+Toggle:Set(false)
+
+--disvider
 
 local Divider = Tab:CreateDivider()
 Divider:Set(false) -- Whether the divider's visibility is to be set to true or false.
@@ -66,4 +109,3 @@ Rayfield:IsVisible()
 -- Distroy the interface
 
 Rayfield:Destroy()
-
